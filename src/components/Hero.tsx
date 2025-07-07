@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Award, Shield, Clock } from 'lucide-react';
+import heroLogo from '/src/ASSETS/04A49A2A-F9DC-4BEC-B3D3-FD88BACB52E4.PNG';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -100,7 +101,7 @@ const Hero = () => {
           >
             <div className="flex justify-center items-center">
               <img 
-                src="/src/ASSETS/04A49A2A-F9DC-4BEC-B3D3-FD88BACB52E4.PNG" 
+                src={heroLogo}
                 alt="Talaveras Framing LLC Logo" 
                 className="w-full max-w-lg h-auto object-contain filter drop-shadow-2xl"
               />

@@ -1,6 +1,11 @@
 import React from 'react';
 import { Home, TreePine, Ruler, Briefcase, ChevronRight } from 'lucide-react';
 
+import serviceImg1 from '/src/ASSETS/TNG97FCAB53-2F3F-48F4-9208-842039BB9743.png';
+import serviceImg2 from '/src/ASSETS/IMG_5215 (2).jpg';
+import serviceImg3 from '/src/ASSETS/cabin (3).jpg';
+import serviceImg4 from '/src/ASSETS/IMG_1931 (1).jpg';
+
 interface ServiceCardProps {
   icon: React.ReactNode;
   title: string;
@@ -49,28 +54,28 @@ const Services = () => {
       icon: <Ruler className="text-wood" size={18} />,
       title: "Custom Wood Carpentry",
       description: "Premium wood framing and carpentry services with meticulous attention to detail for custom homes, remodels, and additions.",
-      imageSrc: "/src/ASSETS/TNG97FCAB53-2F3F-48F4-9208-842039BB9743.png",
+      imageSrc: serviceImg1,
       delay: "delay-75",
     },
     {
       icon: <Home className="text-wood" size={18} />,
       title: "Custom Garages",
       description: "Stunning exposed beams, trusses, and timber accents that showcase the natural beauty of wood in your home or business.",
-      imageSrc: "/src/ASSETS/IMG_5215 (2).jpg",
+      imageSrc: serviceImg2,
       delay: "delay-150",
     },
     {
       icon: <TreePine className="text-wood" size={18} />,
       title: "Decks, Cabins & Log Houses",
       description: "Custom-designed decks, authentic cabins, and log houses built with premium materials and expert craftsmanship.",
-      imageSrc: "/src/ASSETS/cabin (3).jpg",
+      imageSrc: serviceImg3,
       delay: "delay-225",
     },
     {
       icon: <Briefcase className="text-wood" size={18} />,
       title: "Commercial & Residential Projects",
       description: "Full-service wood construction for both commercial buildings and residential homes, with personalized solutions.",
-      imageSrc: "/src/ASSETS/IMG_1931 (1).jpg",
+      imageSrc: serviceImg4,
       delay: "delay-300",
     },
   ];
