@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Send, CheckCircle } from 'lucide-react';
+import { supabase, type ContactSubmission } from '../lib/supabase'; // Adjusted path
 
 const Contact = () => {
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<Omit<ContactSubmission, 'id' | 'created_at' | 'status'>>({
     name: '',
     email: '',
     phone: '',
@@ -11,6 +12,8 @@ const Contact = () => {
   });
   
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormState({
@@ -19,11 +22,54 @@ const Contact = () => {
     });
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real implementation, you would send this data to your server
-    console.log('Form submitted:', formState);
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const submission: ContactSubmission = {
+        name: formState.name,
+        email: formState.email,
+        phone: formState.phone,
+        service: formState.service,
+        message: formState.message,
+      };
+
+      // Using 'contact_submissions' as the table name as confirmed by the user.
+      const { error } = await supabase
+        .from('contact_submissions') // <<<< CHANGED TO 'contact_submissions'
+        .insert([submission]);
+
+      if (error) {
+        console.error('Supabase error details:', error);
+        throw error;
+      }
+
+      setIsSubmitted(true);
+      // Reset form fields
+      setFormState({
+        name: '',
+        email: '',
+        phone: '',
+        service: '',
+        message: '',
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      let errorMessage = 'There was an error submitting your message. Please try again or call us directly.';
+      if (error instanceof Error && 'message' in error) {
+        // Check if Supabase provided a more specific message
+        if (error.message.includes('permission denied') || error.message.includes('policy')) {
+            errorMessage = 'There was a problem with saving your submission. Please check your details or contact support if the issue persists (Policy Error).';
+        } else if (error.message.includes('table') && error.message.includes('does not exist')) {
+            errorMessage = 'The submissions system is temporarily unavailable. Please try again later (Table Error).';
+        }
+      }
+      setSubmitError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -48,14 +94,25 @@ const Contact = () => {
                   Your message has been received. We'll get back to you within 24-48 hours.
                 </p>
                 <button 
-                  onClick={() => setIsSubmitted(false)}
+                  onClick={() => {
+                    setIsSubmitted(false);
+                    setSubmitError(null); // Also reset error on sending another message
+                  }}
                   className="btn-primary bg-navy"
+                  type="button"
                 >
                   Send Another Message
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md">
+                {submitError && (
+                  <div className="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-md">
+                    <p className="font-medium">Submission Error</p>
+                    <p className="text-sm">{submitError}</p>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <div>
                     <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
@@ -136,15 +193,30 @@ const Contact = () => {
                 
                 <button 
                   type="submit" 
-                  className="btn-primary bg-navy flex items-center justify-center"
+                  disabled={isSubmitting}
+                  className={`btn-primary bg-navy flex items-center justify-center w-full md:w-auto ${
+                    isSubmitting ? 'opacity-75 cursor-not-allowed' : 'hover:bg-opacity-90'
+                  }`}
                 >
-                  Send Message
-                  <Send size={18} className="ml-2" />
+                  {isSubmitting ? (
+                    <>
+                      <div role="status" className="inline-block h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin">
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send size={18} className="ml-2" />
+                    </>
+                  )}
                 </button>
               </form>
             )}
           </div>
           
+          {/* Contact Information and Business Hours side panel remains the same */}
           <div>
             <div className="bg-navy text-white p-8 rounded-lg shadow-md mb-8">
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
