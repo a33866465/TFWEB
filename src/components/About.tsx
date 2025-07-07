@@ -1,6 +1,11 @@
 import React from 'react';
 import { CheckCircle, Award, Building as FactoryBuilding, Users, User as UserHard } from 'lucide-react';
 
+import aboutImg1 from '/src/ASSETS/NARIMG_1944.JPG';
+import aboutImg2 from '/src/ASSETS/tng2image0 (2).png';
+import aboutImg3 from '/src/ASSETS/logcabinIMG_2435.jpg';
+import aboutImg4 from '/src/ASSETS/stairBB51B454-D8E1-419B-A1C1-4E9B4918F82E.png';
+
 const About = () => {
   const achievements = [
     { icon: <Award size={20} />, count: '5+', label: 'Years in Business' },
@@ -26,13 +31,13 @@ const About = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <img 
-                  src="/src/ASSETS/NARIMG_1944.JPG" 
+                  src={aboutImg1}
                   alt="Craftsman working with wood" 
                   className="rounded-lg object-cover h-64 w-full shadow-md"
                   loading="lazy"
                 />
                 <img 
-                  src="/src/ASSETS/tng2image0 (2).png" 
+                  src={aboutImg2}
                   alt="Woodworking detail" 
                   className="rounded-lg object-cover h-48 w-full shadow-md"
                   loading="lazy"
@@ -40,13 +45,13 @@ const About = () => {
               </div>
               <div className="mt-8 space-y-4">
                 <img 
-                  src="/src/ASSETS/logcabinIMG_2435.jpg" 
+                  src={aboutImg3}
                   alt="Cabin exterior" 
                   className="rounded-lg object-cover h-48 w-full shadow-md"
                   loading="lazy"
                 />
                 <img 
-                  src="/src/ASSETS/stairBB51B454-D8E1-419B-A1C1-4E9B4918F82E.png" 
+                  src={aboutImg4}
                   alt="Wood beam interior" 
                   className="rounded-lg object-cover h-64 w-full shadow-md"
                   loading="lazy"
